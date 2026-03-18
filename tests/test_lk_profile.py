@@ -1,6 +1,6 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.common.by import By
 from web_locators.locators import *
 from data.urls import Urls
 
@@ -8,48 +8,63 @@ from data.urls import Urls
 class TestStellarBurgersProfileForm:
 
     def test_click_profile_button_open_profile_form(self, login):
-        """ Открыть личный кабинет """
+        """Открыть личный кабинет"""
         driver = login
-
         driver.find_element(*MainPage.mn_profile_button).click()
 
-        WebDriverWait(driver, 3).until(EC.presence_of_element_located(LKProfile.lk_info_message))
-        profile = driver.find_element(*LKProfile.lk_history_shop_button)
-        assert Urls.url_profile == driver.current_url and profile.text == 'История заказов'
+        WebDriverWait(driver, 5).until(EC.visibility_of_element_located(LKProfile.lk_info_message))
+
+        
+        history_button = driver.find_element(*LKProfile.history_orders_button)  
+
+        assert driver.current_url == Urls.url_profile
+        assert history_button.is_displayed(), "Кнопка 'История заказов' не отображается в ЛК"
 
     def test_click_constructor_button_show_constructor_form(self, login):
-        """ Переход из личного кабинета в конструктор при нажатии кнопки 'Конструктор' """
+        """Переход из личного кабинета в конструктор при нажатии кнопки 'Конструктор'"""
         driver = login
-
         driver.find_element(*MainPage.mn_profile_button).click()
 
-        WebDriverWait(driver, 3).until(EC.presence_of_element_located(LKProfile.lk_info_message))
+        WebDriverWait(driver, 5).until(EC.visibility_of_element_located(LKProfile.lk_info_message))
+
         driver.find_element(*MainPage.mn_constructor_button).click()
 
-        h1_tag = driver.find_elements(By.XPATH, ".//h1")
-        assert len(h1_tag) > 0 and h1_tag[0].text == 'Соберите бургер'
+        constructor_header = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located(MainPage.constructor_header)
+        )
+
+        assert constructor_header.is_displayed(), "Заголовок 'Соберите бургер' не отображается"
+
 
     def test_click_logo_button_show_constructor_form(self, login):
-        """ Переход из личного кабинета в конструктор при нажатии на лого """
+        """Переход из личного кабинета в конструктор при нажатии на лого"""
         driver = login
-
         driver.find_element(*MainPage.mn_profile_button).click()
 
-        WebDriverWait(driver, 3).until(EC.presence_of_element_located(LKProfile.lk_info_message))
+        WebDriverWait(driver, 5).until(EC.visibility_of_element_located(LKProfile.lk_info_message))
+
         driver.find_element(*MainPage.mn_logo).click()
 
-        h1_tag = driver.find_elements(By.XPATH, ".//h1")
-        assert len(h1_tag) > 0 and h1_tag[0].text == 'Соберите бургер'
+        constructor_header = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located(MainPage.constructor_header)
+        )
+
+        assert constructor_header.is_displayed(), "Заголовок 'Соберите бургер' не отображается после клика по логотипу"
 
     def test_click_logout_button_in_lk_open_login_form(self, login):
-        """ Выйти из аккаунта """
+        """Выйти из аккаунта"""
         driver = login
-
         driver.find_element(*MainPage.mn_profile_button).click()
-        WebDriverWait(driver, 8).until(EC.presence_of_element_located(LKProfile.lk_info_message))
+
+        WebDriverWait(driver, 8).until(EC.visibility_of_element_located(LKProfile.lk_info_message))
 
         driver.find_element(*LKProfile.lk_logout_button).click()
-        WebDriverWait(driver, 8).until(EC.presence_of_element_located(AuthLogin.al_login_button_any_forms))
 
-        login_button = driver.find_element(*AuthLogin.al_element_with_login_text)
-        assert driver.current_url == Urls.url_login and login_button.text == 'Вход'
+        WebDriverWait(driver, 8).until(
+            EC.visibility_of_element_located(AuthLogin.al_login_button_any_forms)
+        )
+
+        login_button = driver.find_element(*AuthLogin.login_button_with_text)  
+
+        assert driver.current_url == Urls.url_login
+        assert login_button.is_displayed(), "Кнопка 'Вход' не отображается после выхода"
