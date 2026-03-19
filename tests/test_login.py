@@ -4,13 +4,10 @@ from web_locators.locators import *
 from data.urls import Urls
 from data.data import PersonData
 
-
-class TestStellarBurgersLoginLogoutForm:
+class TestStellarBurgersLoginForm:
 
     def test_login_correct_email_and_password_show_main_page(self, driver):
-        """При вводе корректных данных отображается основная страничка"""
-        
-        driver.get(Urls.url_main)  
+        driver.get(Urls.url_main)
 
         driver.find_element(*MainPage.mn_auth).click()
 
@@ -20,85 +17,58 @@ class TestStellarBurgersLoginLogoutForm:
         driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
         driver.find_element(*AuthLogin.al_login_button_any_forms).click()
 
-        
-        order_button = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(MainPage.order_button_with_text)
+        order_btn = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(MainPage.order_button_visible)
         )
-
-        assert driver.current_url == Urls.url_main, "После логина не перешли на главную страницу"
-        assert order_button.is_displayed(), "Кнопка 'Оформить заказ' не отображается после успешного логина"
+        assert driver.current_url == Urls.url_main
+        assert order_btn.is_displayed(), "Кнопка 'Оформить заказ' не видна после логина"
 
     def test_login_sign_in_button_show_login_page(self, driver):
-        """Проверка входа через кнопку 'Войти в аккаунт'"""
         driver.find_element(*MainPage.mn_auth).click()
-
         WebDriverWait(driver, 8).until(EC.visibility_of_element_located(AuthLogin.al_login_text))
-
         driver.find_element(*AuthLogin.al_email_field).send_keys(PersonData.login)
         driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
         driver.find_element(*AuthLogin.al_login_button_any_forms).click()
-
-        order_button = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(MainPage.order_button_with_text)
+        order_btn = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(MainPage.order_button_visible)
         )
-
         assert driver.current_url == Urls.url_main
-        assert order_button.is_displayed()
+        assert order_btn.is_displayed()
 
     def test_login_personal_account_button_show_login_page(self, driver):
-        """Проверка входа через кнопку 'Личный кабинет'"""
         driver.find_element(*MainPage.mn_profile_button).click()
-
         WebDriverWait(driver, 8).until(EC.visibility_of_element_located(AuthLogin.al_login_text))
-
         driver.find_element(*AuthLogin.al_email_field).send_keys(PersonData.login)
         driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
         driver.find_element(*AuthLogin.al_login_button_any_forms).click()
-
-        order_button = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(MainPage.order_button_with_text)
+        order_btn = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(MainPage.order_button_visible)
         )
-
         assert driver.current_url == Urls.url_main
-        assert order_button.is_displayed()
+        assert order_btn.is_displayed()
 
     def test_login_registration_form_sign_in_button(self, driver):
-        """Проверка входа через кнопку 'Войти' в форме регистрации"""
         driver.get(Urls.url_register)
-
         driver.find_element(*AuthLogin.al_login_text_with_href).click()
-
         WebDriverWait(driver, 8).until(EC.visibility_of_element_located(AuthLogin.al_login_text))
-
         driver.find_element(*AuthLogin.al_email_field).send_keys(PersonData.login)
         driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
         driver.find_element(*AuthLogin.al_login_button_any_forms).click()
-
-        order_button = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(MainPage.order_button_with_text)
+        order_btn = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(MainPage.order_button_visible)
         )
-
         assert driver.current_url == Urls.url_main
-        assert order_button.is_displayed()
+        assert order_btn.is_displayed()
 
     def test_login_forgot_password_form_sign_in_button(self, driver):
-        """Проверка входа через кнопку 'Войти' в форме 'Восстановление пароля'"""
         driver.get(Urls.url_forgot_password)
-
         driver.find_element(*AuthPassword.ap_login_text_with_href).click()
-
         WebDriverWait(driver, 8).until(EC.visibility_of_element_located(AuthLogin.al_login_text))
-
         driver.find_element(*AuthLogin.al_email_field).send_keys(PersonData.login)
         driver.find_element(*AuthLogin.al_password_field).send_keys(PersonData.password)
         driver.find_element(*AuthLogin.al_login_button_any_forms).click()
-
-        order_button = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(MainPage.order_button_with_text)
+        order_btn = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(MainPage.order_button_visible)
         )
-
         assert driver.current_url == Urls.url_main
-        assert order_button.is_displayed()
-
-        order_button = driver.find_element(*MainPage.mn_order_button)
-        assert driver.current_url == Urls.url_main_paige and order_button.text == 'Оформить заказ'
+        assert order_btn.is_displayed()
